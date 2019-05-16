@@ -1,0 +1,129 @@
+    // JavaCUP 
+
+package AnaliseSintatica;
+
+import java.io.*;
+import java_cup.runtime.*;
+import AnaliseSintatica.Yylex;
+
+parser code
+{:
+        public Symbol s;
+
+	/*public static void main (String args[]) throws Exception{
+		//new parser(new Yylex(new FileInputStream(args[0]))).parse();
+		new parser(new Yylex(System.in)).parse();
+	}*/
+	
+	public void syntax_error(Symbol s){
+                this.s = s;
+		report_error("Error de sintaxis. Linha: " +(s.right + 1) +
+		" Coluna: " + s.left + ". Texto: \"" + s.value + "\"", null);
+       // public static void carregar(String arquivo) throws Exception{
+       // new parser(new Yylex(new FileInputStream(arquivo))).parse();
+        }
+
+        public Symbol getS () {
+            return s;
+        }
+:};
+
+
+/* Terminais (tokens retornados pelo scanner). */
+
+terminal	BEGIN, END, OPERADOR_ARITMETICO, COND_IF, COND_ELIF, COND_ELSE, ABRE_PARENTESES, FECHA_PARENTESES, ABRE_CHAVES, FECHA_CHAVES, ABRE_COLCHETES, FECHA_COLCHETES,
+    WHILE, BOOLEAN, TIPOS_PRIMITIVOS, VAR, PONTO_VIRGULA, DOIS_PONTOS, PRINT, TEXTO, OPERADOR_LOGICO, OPERADOR_CONDICIONAL, ATRIBUICAO, QUEBRA_LINHA, ERRO,
+    NUMERO, ESPACO, PONTO, COMENTARIO_BLOCO, COMENTARIO_LINHA, VIRGULA;
+
+/* Não-Terminais */
+
+non terminal inicio, programa, declaracao, declaracao_atribuicao, atribuicao, operacao_aritmetica_parenteses; 
+non terminal laco, escrever, escrever_recursivo, operacao_aritmetica, expressao_aritmetica;
+
+
+/* A gramática */
+
+//Define derivação raiz
+
+start with inicio ;
+
+inicio ::= BEGIN END | BEGIN programa END;
+
+programa ::= declaracao | atribuicao | declaracao_atribuicao | escrever | expressao_aritmetica;
+
+declaracao ::= 
+      TIPOS_PRIMITIVOS VAR PONTO_VIRGULA 
+    | TIPOS_PRIMITIVOS VAR PONTO_VIRGULA programa;
+
+atribuicao ::= 
+      VAR ATRIBUICAO NUMERO PONTO_VIRGULA 
+    | VAR ATRIBUICAO NUMERO PONTO_VIRGULA programa
+    | VAR ATRIBUICAO TEXTO PONTO_VIRGULA
+    | VAR ATRIBUICAO TEXTO PONTO_VIRGULA programa
+    | VAR ATRIBUICAO BOOLEAN PONTO_VIRGULA
+    | VAR ATRIBUICAO BOOLEAN PONTO_VIRGULA programa
+    | VAR ATRIBUICAO NUMERO PONTO NUMERO PONTO_VIRGULA
+    | VAR ATRIBUICAO NUMERO PONTO NUMERO PONTO_VIRGULA programa;
+
+declaracao_atribuicao ::=
+      TIPOS_PRIMITIVOS VAR ATRIBUICAO TEXTO PONTO_VIRGULA
+    | TIPOS_PRIMITIVOS VAR ATRIBUICAO TEXTO VIRGULA declaracao_atribuicao
+    | VAR ATRIBUICAO TEXTO VIRGULA declaracao_atribuicao
+    | TIPOS_PRIMITIVOS VAR ATRIBUICAO NUMERO PONTO_VIRGULA
+    | TIPOS_PRIMITIVOS VAR ATRIBUICAO NUMERO VIRGULA declaracao_atribuicao
+    | VAR ATRIBUICAO NUMERO VIRGULA declaracao_atribuicao
+    | TIPOS_PRIMITIVOS VAR ATRIBUICAO BOOLEAN PONTO_VIRGULA
+    | TIPOS_PRIMITIVOS VAR ATRIBUICAO BOOLEAN VIRGULA declaracao_atribuicao
+    | VAR ATRIBUICAO BOOLEAN VIRGULA declaracao_atribuicao
+    | TIPOS_PRIMITIVOS VAR ATRIBUICAO NUMERO PONTO NUMERO PONTO_VIRGULA
+    | TIPOS_PRIMITIVOS VAR ATRIBUICAO NUMERO PONTO NUMERO VIRGULA declaracao_atribuicao
+    | VAR ATRIBUICAO NUMERO PONTO NUMERO VIRGULA declaracao_atribuicao;
+      
+
+escrever ::=
+     PRINT ABRE_PARENTESES TEXTO FECHA_PARENTESES PONTO_VIRGULA 
+   | PRINT ABRE_PARENTESES TEXTO FECHA_PARENTESES PONTO_VIRGULA programa
+   | PRINT ABRE_PARENTESES VAR FECHA_PARENTESES PONTO_VIRGULA
+   | PRINT ABRE_PARENTESES VAR FECHA_PARENTESES PONTO_VIRGULA programa;
+
+
+expressao_aritmetica ::=
+     VAR ATRIBUICAO operacao_aritmetica PONTO_VIRGULA
+   | VAR ATRIBUICAO operacao_aritmetica PONTO_VIRGULA programa
+   | VAR ATRIBUICAO operacao_aritmetica_parenteses PONTO_VIRGULA
+   | VAR ATRIBUICAO operacao_aritmetica_parenteses PONTO_VIRGULA programa;
+
+
+operacao_aritmetica ::=
+     NUMERO OPERADOR_ARITMETICO NUMERO
+   | NUMERO OPERADOR_ARITMETICO operacao_aritmetica
+   | VAR OPERADOR_ARITMETICO operacao_aritmetica;
+
+
+operacao_aritmetica_parenteses ::=
+     ABRE_PARENTESES NUMERO OPERADOR_ARITMETICO NUMERO FECHA_PARENTESES // (1 + 1)
+   | ABRE_PARENTESES NUMERO OPERADOR_ARITMETICO operacao_aritmetica FECHA_PARENTESES // (1 + 1 + n...)
+   | ABRE_PARENTESES NUMERO OPERADOR_ARITMETICO operacao_aritmetica_parenteses FECHA_PARENTESES //(1 + (1 + 1)) ou (1 + (1 + 1 + n...))
+   | ABRE_PARENTESES operacao_aritmetica_parenteses OPERADOR_ARITMETICO NUMERO FECHA_PARENTESES //((1 + 1) + 1) ou ((1 + 1 + n...) + 1)
+   | ABRE_PARENTESES operacao_aritmetica_parenteses OPERADOR_ARITMETICO operacao_aritmetica_parenteses FECHA_PARENTESES //((1 + 1) + (1 + 1) ou ((1 + 1 + n...) + (1 + 1 + n...))
+   | ABRE_PARENTESES operacao_aritmetica_parenteses OPERADOR_ARITMETICO operacao_aritmetica FECHA_PARENTESES // ((1 + 1 + n...) + 1 + n...)
+   | ABRE_PARENTESES NUMERO OPERADOR_ARITMETICO operacao_aritmetica_parenteses operacao_aritmetica FECHA_PARENTESES;
+
+
+
+    
+// n = (1 + (1 + 1));
+
+
+// print(var); print('teste'); print(var + 'teste' + var);
+
+    
+
+
+
+
+
+
+
+
+
