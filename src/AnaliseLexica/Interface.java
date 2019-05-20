@@ -9,7 +9,9 @@ import AnaliseSintatica.Yylex;
 import AnaliseSintatica.parser;
 import com.sun.webkit.ContextMenu;
 import java.awt.Component;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringReader;
 import java.nio.file.Files;
@@ -19,6 +21,7 @@ import java.util.logging.Logger;
 import java_cup.runtime.Symbol;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -33,7 +36,6 @@ public class Interface extends javax.swing.JFrame {
     public Interface() {
         initComponents();
         setLocationRelativeTo(null);
-        
 
 //       new Thread(t1).start();
     }
@@ -125,6 +127,11 @@ public class Interface extends javax.swing.JFrame {
         arquivo.add(jMenuItem1);
 
         salvar.setText("Salvar");
+        salvar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                salvarActionPerformed(evt);
+            }
+        });
         arquivo.add(salvar);
 
         jMenuBar1.add(arquivo);
@@ -264,7 +271,7 @@ public class Interface extends javax.swing.JFrame {
 
             analiseLexicaBox.setText(analiseLexicaBox.getText() + "Analise lexica concluída com sucesso!\n");
             analiseLexicaBox.setText(analiseLexicaBox.getText() + "Analise sintatica iniciada\n");
-            
+
             try {
                 Thread.sleep(500);
             } catch (InterruptedException ex) {
@@ -339,19 +346,61 @@ public class Interface extends javax.swing.JFrame {
 
     private void infoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_infoActionPerformed
 
-        
+
     }//GEN-LAST:event_infoActionPerformed
 
     private void sobreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sobreActionPerformed
-        String msg = "Projeto didático para a disciplina de Compiladores \n| 7º período - 2019 | \nAnderson Faria, Mateus Celestino";
+        String msg = "| Projeto didático para a disciplina de Compiladores | "
+                + "\n| 7º período - 2019 - Ciência da Computação |"
+                + "\n| Professor Rodrigo César Evangelista |"
+                + "\n| If Sul de Minas - Campus Muzambinho MG |"
+                + "\n| Anderson Faria, Mateus Celestino |";
         String title = "Projeto de Compiladores";
         JOptionPane.showMessageDialog(null, msg, title, 1);
     }//GEN-LAST:event_sobreActionPerformed
+
+    private void salvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salvarActionPerformed
+        this.salvar();
+    }//GEN-LAST:event_salvarActionPerformed
 
     public static void gerarLexer(String path) {
         File file = new File(path);
         jflex.Main.generate(file);
 
+    }
+
+    public void salvar() {
+        FileNameExtensionFilter extensionFilter = new FileNameExtensionFilter("Text File", "txt");
+        final JFileChooser saveAsFileChooser = new JFileChooser();
+        saveAsFileChooser.setApproveButtonText("Save");
+        saveAsFileChooser.setFileFilter(extensionFilter);
+        int actionDialog = saveAsFileChooser.showOpenDialog(this);
+        if (actionDialog != JFileChooser.APPROVE_OPTION) {
+            return;
+        }
+
+        File file = saveAsFileChooser.getSelectedFile();
+        if (!file.getName().endsWith(".pht")) {
+            file = new File(file.getAbsolutePath() + ".pht");
+        }
+
+        BufferedWriter outFile = null;
+        try {
+            outFile = new BufferedWriter(new FileWriter(file));
+
+            areaDeTexto.write(outFile);
+            JOptionPane.showMessageDialog(null, "Salvo com sucesso", "Info", 1);
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } finally {
+            if (outFile != null) {
+                try {
+                    outFile.close();
+                } catch (IOException e) {
+                }
+            }
+        }
     }
 
     /**
