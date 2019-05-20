@@ -32,10 +32,10 @@ public class Gerador {
         String path = "C:\\Users\\fiodo\\OneDrive\\Documentos\\GitHub\\ProjetoCompiladores-master\\src\\AnaliseSintatica\\Lexer.flex";
         gerarLexer(path);
 
-        String teste = "Begin String teste; Float neste; teste = 10; neste = 56; String leste = '56', oeste = '57'; End";
-        String teste2 = "IfmuzMG: Begin Integer teste[10] = [10, 5, 'teste']; for (String var : var) {teste = 10;} End";
+        String teste = "IfmuzMG: Begin String teste; Float neste; teste = 10; neste = 56; String leste = '56', oeste = '57'; End";
+        String teste2 = "IfmuzMG: Begin //teste End";
 
-        StringReader st = new StringReader(teste2);
+        StringReader st = new StringReader(teste);
         parser p = new parser(new Yylex(st));
 
         try {

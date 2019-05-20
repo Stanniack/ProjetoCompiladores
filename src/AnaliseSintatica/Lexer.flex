@@ -48,7 +48,7 @@ numeros = [1-9]*/
 /* Comentarios */
 
 //*("/\*"[a-zA-Z0-9]*"\*/")      {lexeme = yytext(); return COMENTARIO_BLOCO;}*/
-/*("//".*)      {return new Symbol (sym.COMENTARIO_LINHA, yychar, yyline, yytext());}*/
+("//".*)      {return new Symbol (sym.COMENTARIO_LINHA, yychar, yyline, yytext());}
 
 
 /* Palavras reservadas*/

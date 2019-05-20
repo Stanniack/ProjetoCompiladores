@@ -61,6 +61,7 @@ public String lexeme;
 ("String" | "Integer" | "Float" | "Double" | "Long")       {lexeme = yytext(); return TIPOS_PRIMITIVOS;}
 
 ( [A-Za-z].[0-9a-zA-Z]* )       {lexeme = yytext(); return VAR;}
+( "//".* )       {lexeme = yytext(); return COMENTARIO_LINHA;}
 
 ("\'"[^'].*"\'") {lexeme = yytext(); return TEXTO;}
 ([0-9]+) {lexeme = yytext(); return NUMERO;}

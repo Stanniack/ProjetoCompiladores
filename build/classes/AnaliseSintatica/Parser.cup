@@ -33,13 +33,13 @@ parser code
 
 terminal	BEGIN, END, OPERADOR_ARITMETICO, COND_IF, COND_ELIF, COND_ELSE, ABRE_PARENTESES, FECHA_PARENTESES, ABRE_CHAVES, FECHA_CHAVES, ABRE_COLCHETES, FECHA_COLCHETES,
     WHILE, BOOLEAN, TIPOS_PRIMITIVOS, VAR, PONTO_VIRGULA, DOIS_PONTOS, PRINT, TEXTO, OPERADOR_LOGICO, OPERADOR_CONDICIONAL, ATRIBUICAO, QUEBRA_LINHA, ERRO,
-    NUMERO, ESPACO, PONTO, COMENTARIO_BLOCO, COMENTARIO_LINHA, VIRGULA, OPERADOR_LOGICO_NOT, FOR, IFMUZ;
+    NUMERO, ESPACO, PONTO, COMENTARIO_LINHA, VIRGULA, OPERADOR_LOGICO_NOT, FOR, IFMUZ;
 
 /* Não-Terminais */
 
 non terminal inicio, programa, declaracao, declaracao_atribuicao, atribuicao, operacao_aritmetica_parenteses, condicional_senaose; 
 non terminal laco_for, escrever, escrever_recursivo, operacao_aritmetica, expressao_aritmetica, condicional, laco_while, condicional_senao;
-non terminal operador_ternario, laco_for_each, vetores_recursivo;
+non terminal operador_ternario, laco_for_each, vetores_recursivo, comentario;
 
 
 /* A gramática */
@@ -59,7 +59,12 @@ programa ::=
     | condicional
     | laco_while
     | laco_for
-    | laco_for_each;
+    | laco_for_each
+    | comentario;
+
+comentario ::=
+      COMENTARIO_LINHA
+    | COMENTARIO_LINHA programa;
 
 declaracao ::= 
       TIPOS_PRIMITIVOS VAR PONTO_VIRGULA 
