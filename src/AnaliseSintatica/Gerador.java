@@ -33,7 +33,7 @@ public class Gerador {
         gerarLexer(path);
 
         String teste = "Begin String teste; Float neste; teste = 10; neste = 56; String leste = '56', oeste = '57'; End";
-        String teste2 = "Begin Integer teste[10] = [10, 5, 'teste']; for (String var : var) {teste = 10;} End";
+        String teste2 = "IfmuzMG: Begin Integer teste[10] = [10, 5, 'teste']; for (String var : var) {teste = 10;} End";
 
         StringReader st = new StringReader(teste2);
         parser p = new parser(new Yylex(st));

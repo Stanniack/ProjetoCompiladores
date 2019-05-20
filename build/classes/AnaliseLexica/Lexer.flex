@@ -46,6 +46,7 @@ public String lexeme;
 
 
 /* Palavras reservadas*/
+("IfmuzMG")       {lexeme = yytext(); return IFMUZ;}
 ("Begin")       {lexeme = yytext(); return BEGIN;}
 ("End")       {lexeme = yytext(); return END;}
 ("if")       {lexeme = yytext(); return COND_IF;}

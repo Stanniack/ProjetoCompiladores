@@ -52,6 +52,7 @@ numeros = [1-9]*/
 
 
 /* Palavras reservadas*/
+("IfmuzMG") {return new Symbol (sym.IFMUZ, yychar, yyline, yytext());}
 ("Begin") {return new Symbol (sym.BEGIN, yychar, yyline, yytext());}
 ("End") {return new Symbol (sym.END, yychar, yyline, yytext());}
 ("+" | "-" | "**" | "/" | "//" | "*" | "%") {return new Symbol (sym.OPERADOR_ARITMETICO, yychar, yyline, yytext());}
