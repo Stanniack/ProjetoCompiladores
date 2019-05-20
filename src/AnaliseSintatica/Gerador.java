@@ -29,11 +29,11 @@ public class Gerador {
 
     public static void main(String[] args) {
         // TODO code application logic here
-        //String path = "C:\\Users\\12161003882\\Documents\\GitHub\\ProjetoCompiladores-master\\src\\AnaliseSintatica\\Lexer.flex";
-        //gerarLexer(path);
+        String path = "C:\\Users\\fiodo\\OneDrive\\Documentos\\GitHub\\ProjetoCompiladores-master\\src\\AnaliseSintatica\\Lexer.flex";
+        gerarLexer(path);
 
         String teste = "Begin String teste; Float neste; teste = 10; neste = 56; String leste = '56', oeste = '57'; End";
-        String teste2 = "Begin teste = ( (1 + 1 + 1) + (1 + (1 + 1) + 1)); End";
+        String teste2 = "Begin Integer teste[10] = [10, 5, 'teste']; for (String var : var) {teste = 10;} End";
 
         StringReader st = new StringReader(teste2);
         parser p = new parser(new Yylex(st));

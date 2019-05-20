@@ -22,7 +22,8 @@ public String lexeme;
 /* Operador de atribuição, lógico e condicional */
 ("=")    {lexeme = yytext(); return ATRIBUICAO;}
 ("==" | ">" | "<" | "!=")    {lexeme = yytext(); return OPERADOR_CONDICIONAL;}
-("and" | "or" | "not")    {lexeme = yytext(); return OPERADOR_LOGICO;}
+("and" | "or")    {lexeme = yytext(); return OPERADOR_LOGICO;}
+("not")    {lexeme = yytext(); return OPERADOR_LOGICO_NOT;}
 
 
 /* Operadores aritméticos*/
@@ -51,6 +52,7 @@ public String lexeme;
 ("elif")       {lexeme = yytext(); return COND_ELIF;}
 ("else")       {lexeme = yytext(); return COND_ELSE;}
 ("while")       {lexeme = yytext(); return WHILE;}
+("for")       {lexeme = yytext(); return FOR;}
 ("print")       {lexeme = yytext(); return PRINT;}
 ("true" | "false")       {lexeme = yytext(); return BOOLEAN;}
 

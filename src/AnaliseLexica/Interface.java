@@ -5,6 +5,10 @@
  */
 package AnaliseLexica;
 
+import AnaliseSintatica.Yylex;
+import AnaliseSintatica.parser;
+import com.sun.webkit.ContextMenu;
+import java.awt.Component;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
@@ -12,7 +16,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java_cup.runtime.Symbol;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -26,6 +32,8 @@ public class Interface extends javax.swing.JFrame {
      */
     public Interface() {
         initComponents();
+        setLocationRelativeTo(null);
+        
 
 //       new Thread(t1).start();
     }
@@ -46,13 +54,20 @@ public class Interface extends javax.swing.JFrame {
         tabela = new javax.swing.JTable();
         botaoLexico = new javax.swing.JButton();
         limpar = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        analiseLexicaBox = new javax.swing.JTextArea();
+        jSeparator1 = new javax.swing.JSeparator();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         arquivo = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
-        editar = new javax.swing.JMenu();
-        jMenu1 = new javax.swing.JMenu();
+        salvar = new javax.swing.JMenuItem();
+        info = new javax.swing.JMenu();
+        sobre = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         areaDeTexto.setColumns(20);
         areaDeTexto.setRows(5);
@@ -91,6 +106,14 @@ public class Interface extends javax.swing.JFrame {
             }
         });
 
+        analiseLexicaBox.setColumns(20);
+        analiseLexicaBox.setRows(5);
+        jScrollPane3.setViewportView(analiseLexicaBox);
+
+        jLabel1.setText("Análise Léxica");
+
+        jLabel2.setText("Análise Sintática");
+
         arquivo.setText("Arquivo");
 
         jMenuItem1.setText("Abrir");
@@ -101,13 +124,27 @@ public class Interface extends javax.swing.JFrame {
         });
         arquivo.add(jMenuItem1);
 
+        salvar.setText("Salvar");
+        arquivo.add(salvar);
+
         jMenuBar1.add(arquivo);
 
-        editar.setText("Lexemas");
-        jMenuBar1.add(editar);
+        info.setText("Informações");
+        info.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                infoActionPerformed(evt);
+            }
+        });
 
-        jMenu1.setText("Sobre");
-        jMenuBar1.add(jMenu1);
+        sobre.setText("Sobre");
+        sobre.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sobreActionPerformed(evt);
+            }
+        });
+        info.add(sobre);
+
+        jMenuBar1.add(info);
 
         setJMenuBar(jMenuBar1);
 
@@ -120,10 +157,20 @@ public class Interface extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 494, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(botaoLexico, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(limpar, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(15, 15, 15)
+                        .addComponent(jLabel1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane2)
+                            .addComponent(limpar, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane3)
+                            .addComponent(jSeparator1)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel2)))
                 .addContainerGap(12, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -131,8 +178,17 @@ public class Interface extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(37, 37, 37)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 474, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(botaoLexico, javax.swing.GroupLayout.DEFAULT_SIZE, 44, Short.MAX_VALUE)
@@ -146,9 +202,14 @@ public class Interface extends javax.swing.JFrame {
 
     private void botaoLexicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoLexicoActionPerformed
 
+        analiseLexicaBox.setText("");
+        analiseLexicaBox.setText(analiseLexicaBox.getText() + "Análise léxica iniciada\n");
+
+        boolean erro = false;
+
         try {
 
-            String path = "C:\\Users\\12161003882\\Documents\\GitHub\\ProjetoCompiladores-master\\src\\AnaliseLexica\\Lexer.flex";
+            String path = "C:\\Users\\fiodo\\OneDrive\\Documentos\\GitHub\\ProjetoCompiladores-master\\src\\AnaliseLexica\\Lexer.flex";
 
             gerarLexer(path);
 
@@ -175,6 +236,13 @@ public class Interface extends javax.swing.JFrame {
                     case ESPACO:
                         coluna++;
                         break;
+                    case ERRO:
+                        Object[] erros = {token, lexer.lexeme, linha, coluna};
+                        //adiciona nas linhas da tabela
+                        registros.addRow(erros);
+
+                        erro = true;
+                        break;
                     default:
 
                         Object[] linhas = {token, lexer.lexeme, linha, coluna};
@@ -184,13 +252,38 @@ public class Interface extends javax.swing.JFrame {
                         coluna += lexer.yylength();
                         break;
                 }
-
                 //Incrementador de lexemas
                 token = lexer.yylex();
             }
 
         } catch (Exception e) {
             System.out.println("Erro durante a execução do código");
+        }
+
+        if (!erro) {
+
+            analiseLexicaBox.setText(analiseLexicaBox.getText() + "Analise lexica concluída com sucesso!\n");
+            analiseLexicaBox.setText(analiseLexicaBox.getText() + "Analise sintatica iniciada\n");
+            
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            parser p = new parser(new Yylex(new StringReader(areaDeTexto.getText())));
+
+            try {
+                p.parse();
+                analiseLexicaBox.setText(analiseLexicaBox.getText() + "Analise sintatica concluida com sucesso!");
+
+            } catch (Exception ex) {
+                Symbol s = p.getS();
+                this.analiseLexicaBox.setText("Erro sintatico - Linha: " + (s.right + 1) + " - Token: " + s.value + "\n");
+            }
+
+        } else {
+            analiseLexicaBox.setText(analiseLexicaBox.getText() + "Erro léxico encontrado.\n");
         }
 
 
@@ -239,9 +332,21 @@ public class Interface extends javax.swing.JFrame {
 
     private void limparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_limparActionPerformed
         areaDeTexto.setText("");
+        analiseLexicaBox.setText("");
         DefaultTableModel registros = (DefaultTableModel) tabela.getModel();
         registros.setRowCount(0);
     }//GEN-LAST:event_limparActionPerformed
+
+    private void infoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_infoActionPerformed
+
+        
+    }//GEN-LAST:event_infoActionPerformed
+
+    private void sobreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sobreActionPerformed
+        String msg = "Projeto didático para a disciplina de Compiladores \n| 7º período - 2019 | \nAnderson Faria, Mateus Celestino";
+        String title = "Projeto de Compiladores";
+        JOptionPane.showMessageDialog(null, msg, title, 1);
+    }//GEN-LAST:event_sobreActionPerformed
 
     public static void gerarLexer(String path) {
         File file = new File(path);
@@ -294,17 +399,23 @@ public class Interface extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextArea analiseLexicaBox;
     private javax.swing.JTextArea areaDeTexto;
     private javax.swing.JMenu arquivo;
     private javax.swing.JButton botaoLexico;
-    private javax.swing.JMenu editar;
-    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu info;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JButton limpar;
     private java.awt.MenuBar menuBar1;
+    private javax.swing.JMenuItem salvar;
+    private javax.swing.JMenuItem sobre;
     private javax.swing.JTable tabela;
     // End of variables declaration//GEN-END:variables
 }

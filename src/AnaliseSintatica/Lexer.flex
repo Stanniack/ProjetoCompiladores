@@ -14,7 +14,7 @@ import AnaliseSintatica.sym;
 //%char
 //%ignorecase
 %eofval{
-    return new Symbol(sym.EOF, new String("Fim do Arquivo"));
+    return new Symbol(sym.EOF, new String("FIM"));
 %eofval}
 //%class Lexer
 //%type Tokens
@@ -65,12 +65,14 @@ numeros = [1-9]*/
 ("[") {return new Symbol (sym.ABRE_COLCHETES, yychar, yyline, yytext());}
 ("]") {return new Symbol (sym.FECHA_COLCHETES, yychar, yyline, yytext());}
 ("while") {return new Symbol (sym.WHILE, yychar, yyline, yytext());}
+("for") {return new Symbol (sym.FOR, yychar, yyline, yytext());}
 ("String" | "Integer" | "Float" | "Double" | "Long" | "Boolean") {return new Symbol (sym.TIPOS_PRIMITIVOS, yychar, yyline, yytext());}
 (";") {return new Symbol (sym.PONTO_VIRGULA, yychar, yyline, yytext());}
 (":") {return new Symbol (sym.DOIS_PONTOS, yychar, yyline, yytext());}
 (",") {return new Symbol (sym.VIRGULA, yychar, yyline, yytext());}
 ("print") {return new Symbol (sym.PRINT, yychar, yyline, yytext());}
-("and" | "or" | "not") {return new Symbol (sym.OPERADOR_LOGICO, yychar, yyline, yytext());}
+("and" | "or") {return new Symbol (sym.OPERADOR_LOGICO, yychar, yyline, yytext());}
+("not") {return new Symbol (sym.OPERADOR_LOGICO_NOT, yychar, yyline, yytext());}
 ("==" | ">" | "<" | "!=") {return new Symbol (sym.OPERADOR_CONDICIONAL, yychar, yyline, yytext());}
 //("\n") {return new Symbol (sym.QUEBRA_LINHA, yychar, yyline, yytext());}
 ("true" | "false") {return new Symbol (sym.BOOLEAN, yychar, yyline, yytext());}

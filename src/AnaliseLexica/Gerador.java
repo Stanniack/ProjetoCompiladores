@@ -26,7 +26,7 @@ public class Gerador {
     }
     public static void main(String[] args) {
         // TODO code application logic here
-        String path = "C:\\Users\\12161003882\\Documents\\GitHub\\ProjetoCompiladores-master\\src\\AnaliseLexica\\Lexer.flex";
+        String path = "C:\\Users\\fiodo\\OneDrive\\Documentos\\GitHub\\ProjetoCompiladores-master\\src\\AnaliseLexica\\Lexer.flex";
         gerarLexer(path);
         
     }
